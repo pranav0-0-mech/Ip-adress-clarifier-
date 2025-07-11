@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IP Address Info Finder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    async function lookupIP() {
+      const ip = document.getElementById('ipInput').value;
+      const resultDiv = document.getElementById('results');
+      resultDiv.innerHTML = 'Fetching data...';try {
+    const res = await fetch(`https://ipapi.co/${ip}/json/`);
+    const data = await res.json();
+
+    if (data.error) {
+      resultDiv.innerHTML = `<p class='text-red-500'>${data.reason}</p>`;
+    } else {
+      resultDiv.innerHTML = `
+        <div class="bg-gray-800 text-white p-4 rounded shadow-md">
+          <p><strong>🌍 IP:</strong> ${data.ip}</p>
+          <p><strong>📍 Location:</strong> ${data.city}, ${data.region}, ${data.country_name}</p>
+          <p><strong>🏢 ISP:</strong> ${data.org}</p>
+          <p><strong>🌐 ASN:</strong> ${data.asn}</p>
+          <p><strong>🕒 Timezone:</strong> ${data.timezone}</p>
+          <p><strong>🔢 IP Type:</strong> ${data.version}</p>
+        </div>`;
+    }
+  } catch (err) {
+    resultDiv.innerHTML = `<p class='text-red-500'>Error fetching data.</p>`;
+  }
+}
+
+  </script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+  <div class="w-full max-w-md p-6 bg-gray-800 rounded-xl shadow-xl">
+    <h1 class="text-2xl font-bold text-center mb-4">🔍 IP Info Finder</h1>
+    <input id="ipInput" type="text" placeholder="Enter IP address..." class="w-full px-4 py-2 rounded text-black mb-4" />
+    <button onclick="lookupIP()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded">Get Info</button>
+    <div id="results" class="mt-6 space-y-2"></div>
+  </div>
+</body>
+</html>
